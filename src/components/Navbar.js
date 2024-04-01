@@ -1,51 +1,39 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemeContext } from '../contexts/ThemeContex';
 import { AuthContext } from '../contexts/AuthContext';
 
-export default class Navbar extends Component {
-    render() {
-        const { headerContainer, headerText, headerTabContainer, headerTab } = styles;
-        return (
-            <AuthContext.Consumer>
-                {(authContext) => {
-                    return (
-                        <ThemeContext.Consumer>
-                            {(themeContext) => {
-                                const { isDarkTheme, lightTheme, darkTheme } = themeContext;
-                                const { isLoggedIn, changeAuthStatus } = authContext;
+const Navbar = () => {
+    const { isDarkTheme, lightTheme, darkTheme } = useContext(ThemeContext);
+    const { isLoggedIn, changeAuthStatus } = useContext(AuthContext);
+    const theme = isDarkTheme ? darkTheme : lightTheme;
 
-                                const theme = isDarkTheme ? darkTheme : lightTheme;
+    const { headerContainer, headerText, headerTabContainer, headerTab } = styles;
 
-                                return (
-                                    <View style={[headerContainer, theme]}>
-                                        <Text style={[headerText, theme]}>ToDo List</Text>
-                                        <TouchableOpacity onPress={changeAuthStatus}>
-                                            <Text style={[headerText, theme]}>{isLoggedIn ? 'Logged In' : 'Logged Out'}</Text>
-                                        </TouchableOpacity>
-                                        <View style={headerTabContainer}>
-                                            <Text style={headerTab}>Overview</Text>
-                                            <Text style={headerTab}>Contact</Text>
-                                            <Text style={headerTab}>Support</Text>
-                                        </View>
-                                    </View>
-                                )
-                            }}
-                        </ThemeContext.Consumer>
-                    )
-                }}
-            </AuthContext.Consumer>
-        )
-    }
+    return (
+        <View style={[headerContainer, theme]}>
+            <Text style={[headerText, theme]}>ToDo List</Text>
+            <TouchableOpacity onPress={changeAuthStatus}>
+                <Text style={[headerText, theme]}>{isLoggedIn ? 'Logged In' : 'Logged Out'}</Text>
+            </TouchableOpacity>
+            <View style={headerTabContainer}>
+                <Text style={headerTab}>Overview</Text>
+                <Text style={headerTab}>Contact</Text>
+                <Text style={headerTab}>Support</Text>
+            </View>
+        </View>
+    );
 }
+
+export default Navbar;
 
 const styles = StyleSheet.create({
     headerContainer: {
         backgroundColor: 'dimgrey',
         height: 200,
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         alignItems: 'center',
-        paddingTop: 25
+        paddingTop: 25,
     },
     headerText: {
         marginTop: 25,

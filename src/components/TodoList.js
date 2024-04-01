@@ -1,30 +1,40 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { ThemeContext } from '../contexts/ThemeContex';
-import { AuthContext } from '../contexts/AuthContext';
+import { TodoListContext } from '../contexts/TodoListContext';
 
+const TodoList = () => {
+    const { isDarkTheme, lightTheme, darkTheme, buttonText, changeTheme } = useContext(ThemeContext);
+    const { todos } = useContext(TodoListContext);
 
-export default class TodoList extends Component {
-    static contextType = ThemeContext;
+    const theme = isDarkTheme ? darkTheme : lightTheme;
 
-    render() {
-        const { isDarkTheme, lightTheme, darkTheme, buttonText, changeTheme } = this.context;
+    const { todoContainer, listItem, buttonContainer } = styles;
 
-        const theme = isDarkTheme ? darkTheme : lightTheme;
-
-        const { todoContainer, item, buttonContainer } = styles;
-        return (
-            <View style={[todoContainer, theme]}>
-                <Text style={[item, theme]}>Do some activity</Text>
-                <Text style={[item, theme]}>Do some activity</Text>
-                <Text style={[item, theme]}>Do some activity</Text>
-                <TouchableOpacity style={buttonContainer} onPress={changeTheme}>
-                    <Text style={buttonText}>Change Theme</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
+    return (
+        <View style={[todoContainer, theme]}>
+            {
+                todos.length ? (
+                    <FlatList
+                        data={todos}
+                        keyExtractor={(todo) => todo.id}
+                        renderItem={({ item }) => {
+                            return (
+                                <Text style={[listItem, theme]}>{item.text}</Text>
+                            )
+                        }}
+                    />
+                ) : (<Text style={[listItem, theme]}>You have no todos</Text>)
+            }
+            <TouchableOpacity style={buttonContainer} onPress={changeTheme}>
+                <Text style={buttonText}>Change Theme</Text>
+            </TouchableOpacity>
+        </View>
+    )
 }
+
+export default TodoList;
+
 
 const styles = StyleSheet.create({
     todoContainer: {
@@ -32,7 +42,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around'
     },
-    item: {
+    listItem: {
         color: 'white',
         fontSize: 18,
         paddingVertical: 10,
