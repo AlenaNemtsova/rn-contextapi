@@ -9,7 +9,7 @@ import TodoListContextProvider from './src/contexts/TodoListContext';
 
 export default function App() {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <AuthContextProvider>
         <ThemeContextProvider>
           <TodoListContextProvider>

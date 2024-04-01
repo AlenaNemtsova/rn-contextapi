@@ -1,15 +1,25 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { ThemeContext } from '../contexts/ThemeContex';
 import { TodoListContext } from '../contexts/TodoListContext';
 
 const TodoList = () => {
+    const [todo, setTodo] = useState('')
     const { isDarkTheme, lightTheme, darkTheme, buttonText, changeTheme } = useContext(ThemeContext);
-    const { todos } = useContext(TodoListContext);
+    const { todos, addTodo } = useContext(TodoListContext);
+
+    const handleChange = (text) => {
+        setTodo(text)
+    }
+
+    const handleAddTodoPress = () => {
+        addTodo(todo);
+        setTodo('');
+    }
 
     const theme = isDarkTheme ? darkTheme : lightTheme;
 
-    const { todoContainer, listItem, buttonContainer } = styles;
+    const { todoContainer, listItem, buttonContainer, input } = styles;
 
     return (
         <View style={[todoContainer, theme]}>
@@ -23,10 +33,22 @@ const TodoList = () => {
                                 <Text style={[listItem, theme]}>{item.text}</Text>
                             )
                         }}
+                        showsVerticalScrollIndicator={false}
                     />
                 ) : (<Text style={[listItem, theme]}>You have no todos</Text>)
             }
-            <TouchableOpacity style={buttonContainer} onPress={changeTheme}>
+            <TextInput
+                value={todo}
+                style={input}
+                onChangeText={(text) => handleChange(text)} />
+            <TouchableOpacity
+                style={buttonContainer}
+                onPress={handleAddTodoPress}>
+                <Text style={buttonText}>Add New Todo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={buttonContainer}
+                onPress={changeTheme}>
                 <Text style={buttonText}>Change Theme</Text>
             </TouchableOpacity>
         </View>
@@ -40,7 +62,8 @@ const styles = StyleSheet.create({
     todoContainer: {
         backgroundColor: 'dimgray',
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        flex: 1
     },
     listItem: {
         color: 'white',
@@ -52,11 +75,21 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 15,
     },
     buttonText: {
         color: 'white',
         fontSize: 18
+    },
+    input: {
+        width: '100%',
+        backgroundColor: 'white',
+        fontSize: 15,
+        borderWidth: 1,
+        borderColor: 'black',
+        marginVertical: 15,
+        padding: 5
     }
 
 })

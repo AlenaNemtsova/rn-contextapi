@@ -14,7 +14,7 @@ const TodoListContextProvider = ({ children }) => {
     }
 
     return (
-        <TodoListContext.Provider value={{ todos }}>
+        <TodoListContext.Provider value={{ todos, addTodo }}>
             {children}
         </TodoListContext.Provider>
     );
