@@ -6,7 +6,7 @@ import { TodoListContext } from '../contexts/TodoListContext';
 const TodoList = () => {
     const [todo, setTodo] = useState('')
     const { isDarkTheme, lightTheme, darkTheme, buttonText, changeTheme } = useContext(ThemeContext);
-    const { todos, addTodo } = useContext(TodoListContext);
+    const { todos, addTodo, removeTodo } = useContext(TodoListContext);
 
     const handleChange = (text) => {
         setTodo(text)
@@ -15,6 +15,10 @@ const TodoList = () => {
     const handleAddTodoPress = () => {
         addTodo(todo);
         setTodo('');
+    }
+
+    const handleRemoveTodo = (id) => {
+        removeTodo(id);
     }
 
     const theme = isDarkTheme ? darkTheme : lightTheme;
@@ -30,7 +34,10 @@ const TodoList = () => {
                         keyExtractor={(todo) => todo.id}
                         renderItem={({ item }) => {
                             return (
-                                <Text style={[listItem, theme]}>{item.text}</Text>
+                                <TouchableOpacity
+                                    onPress={() => { handleRemoveTodo(item.id) }} >
+                                    <Text style={[listItem, theme]}>{item.text}</Text>
+                                </TouchableOpacity>
                             )
                         }}
                         showsVerticalScrollIndicator={false}
